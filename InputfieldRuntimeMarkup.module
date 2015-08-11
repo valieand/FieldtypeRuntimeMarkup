@@ -1,0 +1,76 @@
+<?php
+
+/**
+* ProcessWire Inputfield that shows the runtime markup.
+*
+* @author Andrey Valiev
+*
+* ProcessWire 2.x
+* Copyright (C) 2015 by Ryan Cramer
+* Licensed under GNU/GPL v2, see LICENSE.TXT
+*
+* http://processwire.com
+*
+*/
+class InputfieldRuntimeMarkup extends Inputfield {
+
+    const defaultRows = 5;
+
+    public static function getModuleInfo() {
+        return array(
+        'title'    => __('Inputfield Runtime Markup', __FILE__),
+        'version'  => '0.0.7',
+        'summary'  => __('Displays runtime markup source code in an inputfied.', __FILE__),
+        'author'   => 'Andrey Valiev',
+        'installs' => 'FieldtypeRuntimeMarkup',
+        );
+    }
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function init() {
+        $this->setAttribute('rows', self::defaultRows);
+    }
+
+    public function ___render() {
+
+        $attributes = parent::getAttributes();
+        $value = $attributes['value'];
+
+        return $value;
+    }
+
+    public function getAttrStr($array) {
+        $out = '';
+        foreach($array as $key => $value) {
+            if ($key === 'value') continue;
+            $out .= " {$key}='{$value}'";
+        }
+        return $out;
+    }
+
+    public function ___getConfigInputfields() {
+        $inputfields = parent::___getConfigInputfields();
+
+        // remove required as it is auto populated
+        $f = $inputfields->getChildByName('required');
+        $inputfields->remove($f);
+
+        $field = $this->modules->get('InputfieldTextarea');
+        $field->attr('name', 'markupCode');
+        $field->label = $this->_('Custom PHP code to generate markup');
+        $field->attr('value', $this->attr('markupCode'));
+        $field->attr('rows', 4);
+        $field->description = $this->_('Enter the code to find the selectable pages.');
+        $field->description .= ' ' . $this->_('The snippet should return HTML markup.');
+        $field->notes = $exampleLabel . $this->_('return "<h1>Hello world!</h1>";');
+        $field->collapsed = Inputfield::collapsedBlank;
+
+        $inputfields->append($field);
+
+        return $inputfields;
+    }
+
+}
