@@ -2,6 +2,7 @@
 SMSC.RU API (smsc.ru) версия 3.4 (05.03.2015)
 
 # Usage examples:
+```
 $module = wire()->modules->get("ServiceSmsc");
 list($sms_id, $sms_cnt, $cost, $balance) = $module->send_sms("79999999999", "Ваш пароль: 123", 0);
 list($sms_id, $sms_cnt, $cost, $balance) = $module->send_sms("79999999999", "http://smsc.ru\nSMSC.RU", 0, 0, 0, 0, false, "maxsms=3");
@@ -12,3 +13,4 @@ list($cost, $sms_cnt) = $module->get_sms_cost("79999999999", "Вы успешн�
 $module->send_sms_mail("79999999999", "Ваш пароль: 123", 0, "0101121000");
 list($status, $time) = $module->get_status($sms_id, "79999999999");
 $balance = get_balance();
+```
